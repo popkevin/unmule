@@ -159,12 +159,19 @@ footer {
     color: #16a34a;
 }
 
-.showcase-card .card-img {
-    width: 100%;
-    max-height: 280px;
-    object-fit: cover;
-    display: block;
+.card-gallery {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
     background: #f5f5f5;
+}
+
+.card-gallery img {
+    flex: 1;
+    min-width: 0;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .showcase-card .card-body {
