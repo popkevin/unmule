@@ -172,6 +172,75 @@ footer {
     height: 180px;
     object-fit: cover;
     border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.card-gallery img:hover { opacity: 0.85; }
+
+/* Gallery modal */
+.gallery-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.88);
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-modal.active { display: flex; }
+
+.gallery-modal .gm-img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+.gallery-modal .gm-close,
+.gallery-modal .gm-prev,
+.gallery-modal .gm-next {
+    position: absolute;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+}
+
+.gallery-modal .gm-close:hover,
+.gallery-modal .gm-prev:hover,
+.gallery-modal .gm-next:hover { opacity: 1; }
+
+.gallery-modal .gm-close {
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 2.5rem;
+}
+
+.gallery-modal .gm-prev,
+.gallery-modal .gm-next {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3.5rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.gallery-modal .gm-prev { left: 1rem; }
+.gallery-modal .gm-next { right: 1rem; }
+
+.gallery-modal .gm-counter {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
 }
 
 .showcase-card .card-body {
