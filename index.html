@@ -373,6 +373,110 @@
             color: #dc2626;
         }
 
+        /* Cost analysis */
+        .cost-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .cost-tables {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .cost-card {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .cost-card.mule {
+            border-color: #fecaca;
+        }
+
+        .cost-card.camel {
+            border-color: #bbf7d0;
+        }
+
+        .cost-card .cost-header {
+            padding: 1.25rem 1.5rem;
+            font-weight: 700;
+        }
+
+        .cost-card.mule .cost-header {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .cost-card.camel .cost-header {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .cost-card .cost-header .cost-total {
+            float: right;
+            font-size: 1.3rem;
+        }
+
+        .cost-lines {
+            padding: 0;
+            list-style: none;
+        }
+
+        .cost-lines li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cost-lines li:last-child { border-bottom: none; }
+
+        .cost-lines .label { color: var(--muted); }
+        .cost-lines .price { font-weight: 600; }
+
+        .cost-card.mule .cost-lines li:last-child {
+            background: #fef2f2;
+            font-weight: 700;
+        }
+
+        .cost-card.camel .cost-lines li:last-child {
+            background: #f0fdf4;
+            font-weight: 700;
+        }
+
+        .cost-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .savings-banner {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: var(--ink);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .savings-banner .savings-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #4ade80;
+            letter-spacing: -0.03em;
+        }
+
+        .savings-banner p {
+            color: #999;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
         /* Component mapping */
         .mapping {
             max-width: 100%;
@@ -450,7 +554,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .problem-grid, .steps, .contact-grid {
+            .problem-grid, .steps, .contact-grid, .cost-tables {
                 grid-template-columns: 1fr;
             }
 
@@ -543,6 +647,47 @@
         </div>
     </div>
 </section>
+
+<div class="cost-section" id="cost">
+    <span class="section-label">The Math</span>
+    <h2 class="section-title">See where your money actually goes.</h2>
+
+    <div class="cost-tables">
+        <div class="cost-card mule">
+            <div class="cost-header">MuleSoft (10 vCores) <span class="cost-total">/ year</span></div>
+            <ul class="cost-lines">
+                <li><span class="label">vCore licensing (10 &times; $60K)</span><span class="price">$600,000</span></li>
+                <li><span class="label">Anypoint Platform subscription</span><span class="price">$150,000</span></li>
+                <li><span class="label">Anypoint MQ (message fees)</span><span class="price">$36,000</span></li>
+                <li><span class="label">Premium connectors (SAP, etc.)</span><span class="price">$50,000</span></li>
+                <li><span class="label">API Manager (advanced tier)</span><span class="price">$40,000</span></li>
+                <li><span class="label">Platinum support</span><span class="price">$75,000</span></li>
+                <li><span class="label">Anypoint Studio / DevOps add-ons</span><span class="price">$25,000</span></li>
+                <li><span class="label">Total annual cost</span><span class="price">$976,000</span></li>
+            </ul>
+        </div>
+        <div class="cost-card camel">
+            <div class="cost-header">Apache Camel on AWS/Azure <span class="cost-total">/ year</span></div>
+            <ul class="cost-lines">
+                <li><span class="label">Apache Camel runtime licensing</span><span class="price">$0</span></li>
+                <li><span class="label">EKS/AKS cluster (3 nodes, m5.xlarge)</span><span class="price">$15,800</span></li>
+                <li><span class="label">RabbitMQ (managed, small cluster)</span><span class="price">$3,600</span></li>
+                <li><span class="label">Redis (ElastiCache / Azure Cache)</span><span class="price">$2,400</span></li>
+                <li><span class="label">Kong Gateway (OSS, self-hosted)</span><span class="price">$0</span></li>
+                <li><span class="label">Grafana Cloud (free tier or self-hosted)</span><span class="price">$0</span></li>
+                <li><span class="label">IDE tooling (IntelliJ CE / VS Code)</span><span class="price">$0</span></li>
+                <li><span class="label">Total annual cost</span><span class="price">$21,800</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="savings-banner">
+        <div class="savings-amount">$954,200 saved per year</div>
+        <p>97.8% cost reduction. Same integration patterns. No vendor lock-in.</p>
+    </div>
+
+    <p class="cost-note">Based on a mid-size deployment with 10 MuleSoft vCores. MuleSoft pricing varies by contract; figures represent typical list pricing. Cloud infrastructure costs assume on-demand pricing without reserved instances (which would be even cheaper).</p>
+</div>
 
 <div class="mapping" id="stack">
     <div class="inner">
