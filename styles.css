@@ -97,6 +97,13 @@ footer {
     border-top: 1px solid var(--border);
 }
 
+footer .version {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+
 /* Stack page styles */
 .stack-hero {
     max-width: 1100px;
