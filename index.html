@@ -235,6 +235,12 @@
             background: var(--paper);
         }
 
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+        }
+
         .step-num {
             font-size: 0.8rem;
             font-weight: 800;
@@ -631,16 +637,34 @@
 
     <div class="steps">
         <div class="step">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="22" stroke="#c45a2d" stroke-width="2.5"/>
+                <path d="M16 24h16M24 16v16" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="24" cy="24" r="6" stroke="#c45a2d" stroke-width="2"/>
+                <path d="M14 14l4 4M30 14l-4 4M14 34l4-4M30 34l-4-4" stroke="#c45a2d" stroke-width="2" stroke-linecap="round"/>
+            </svg>
             <span class="step-num">Phase 1</span>
             <h3>Assess</h3>
             <p>We audit your MuleSoft estate &mdash; flows, connectors, APIs, dependencies. You get a detailed migration plan with a hard cost estimate and timeline.</p>
         </div>
         <div class="step">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 24h10l4-8 4 16 4-8h10" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M38 16l4 4-4 4" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 16l-4 4 4 4" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <span class="step-num">Phase 2</span>
             <h3>Migrate</h3>
             <p>We rebuild your integrations in Apache Camel, using automated tooling where possible and expert engineering where it matters. Phased or all-at-once &mdash; your call.</p>
         </div>
         <div class="step">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="8" width="36" height="24" rx="3" stroke="#c45a2d" stroke-width="2.5"/>
+                <path d="M14 18l4 4-4 4" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 26h8" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M18 38h12" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M24 32v6" stroke="#c45a2d" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
             <span class="step-num">Phase 3</span>
             <h3>Operate</h3>
             <p>Go it alone with your team, or let ours manage your integration platform. Either way, you'll never write another seven-figure check for middleware.</p>
