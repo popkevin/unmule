@@ -425,6 +425,15 @@
             color: var(--paper);
         }
 
+        .mapping-table td:nth-child(2) a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .mapping-table td:nth-child(2) a:hover {
+            text-decoration: underline;
+        }
+
         .mapping-table td:nth-child(3) {
             color: #999;
             font-size: 0.9rem;
@@ -535,7 +544,7 @@
     </div>
 </section>
 
-<div class="mapping">
+<div class="mapping" id="stack">
     <div class="inner">
         <span class="section-label">The Stack</span>
         <h2 class="section-title">Every component has a replacement.</h2>
@@ -551,47 +560,47 @@
             <tbody>
                 <tr>
                     <td>Mule Runtime</td>
-                    <td>Apache Camel + Spring Boot</td>
+                    <td><a href="/stack/runtime.html">Apache Camel + Spring Boot</a></td>
                     <td>Same integration patterns, zero licensing, deploys anywhere</td>
                 </tr>
                 <tr>
                     <td>Anypoint Studio</td>
-                    <td>IntelliJ / VS Code + Camel plugin</td>
+                    <td><a href="/stack/ide.html">IntelliJ / VS Code + Camel plugin</a></td>
                     <td>Tools your devs already know</td>
                 </tr>
                 <tr>
                     <td>DataWeave</td>
-                    <td>Java / Groovy</td>
+                    <td><a href="/stack/transforms.html">Java / Groovy</a></td>
                     <td>Real languages with real debuggers and real talent pools</td>
                 </tr>
                 <tr>
                     <td>CloudHub</td>
-                    <td>Kubernetes / Docker / any cloud</td>
+                    <td><a href="/stack/deployment.html">Kubernetes / Docker / any cloud</a></td>
                     <td>No proprietary runtime. Deploy where you want.</td>
                 </tr>
                 <tr>
                     <td>API Manager</td>
-                    <td>Kong / Gravitee / Apache APISIX</td>
+                    <td><a href="/stack/api-gateway.html">Kong / Gravitee / Apache APISIX</a></td>
                     <td>Open-source API gateway with rate limiting, auth, analytics</td>
                 </tr>
                 <tr>
                     <td>Anypoint Exchange</td>
-                    <td>350+ Camel components</td>
+                    <td><a href="/stack/connectors.html">350+ Camel components</a></td>
                     <td>Connectors for every major system, protocol, and cloud service</td>
                 </tr>
                 <tr>
                     <td>Anypoint MQ</td>
-                    <td>RabbitMQ / Kafka / ActiveMQ</td>
+                    <td><a href="/stack/messaging.html">RabbitMQ / Kafka / ActiveMQ</a></td>
                     <td>Industry-standard messaging you probably already run</td>
                 </tr>
                 <tr>
                     <td>Anypoint Monitoring</td>
-                    <td>Grafana + Prometheus / OpenTelemetry</td>
+                    <td><a href="/stack/monitoring.html">Grafana + Prometheus / OpenTelemetry</a></td>
                     <td>Vendor-neutral observability across your entire stack</td>
                 </tr>
                 <tr>
                     <td>Object Store</td>
-                    <td>Redis / Hazelcast</td>
+                    <td><a href="/stack/caching.html">Redis / Hazelcast</a></td>
                     <td>Battle-tested distributed caching</td>
                 </tr>
             </tbody>
