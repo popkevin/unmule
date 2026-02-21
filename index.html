@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unmule - Break Free from MuleSoft</title>
+    <meta name="description" content="Unmule helps companies migrate from MuleSoft to Apache Camel. Cut your integration platform costs by 80% or more.">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --paper: #fafaf9;
+            --accent: #c45a2d;
+            --accent-dark: #a34820;
+            --muted: #6b6b6b;
+            --border: #e5e5e3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--accent); }
+
+        nav a.cta-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        nav a.cta-link:hover { text-decoration: underline; }
+
+        /* Hero */
+        .hero {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 6rem 2rem 5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            max-width: 700px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+        }
+
+        .hero p {
+            margin-top: 1.5rem;
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 550px;
+            line-height: 1.5;
+        }
+
+        .hero .cta-row {
+            margin-top: 2.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover { background: var(--accent-dark); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-secondary:hover { border-color: var(--muted); }
+
+        /* Stats strip */
+        .stats {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--accent);
+        }
+
+        .stat p {
+            margin-top: 0.25rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* Sections */
+        section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        section.alt {
+            background: #f4f3f1;
+            max-width: 100%;
+        }
+
+        section.alt > .inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-top: 0.5rem;
+        }
+
+        /* Problem / Solution */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2.5rem;
+        }
+
+        .problem-card {
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .problem-card.bad {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .problem-card.good {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .problem-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .problem-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .problem-card li {
+            padding: 0.4rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .problem-card li::before {
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+
+        .problem-card.bad li::before { content: "\2715"; color: #dc2626; }
+        .problem-card.good li::before { content: "\2713"; color: #16a34a; }
+
+        /* How it works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .step {
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--paper);
+        }
+
+        .step-num {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .step h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: 0.75rem;
+        }
+
+        .step p {
+            margin-top: 0.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* CTA */
+        .final-cta {
+            text-align: center;
+            padding: 5rem 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .final-cta h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .final-cta p {
+            margin-top: 1rem;
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        .final-cta .btn {
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .problem-grid, .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .hero { padding: 4rem 1.5rem 3rem; }
+            .stats { padding: 0 1.5rem 3rem; }
+            section { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <a href="mailto:kevin@unmule.com" class="cta-link">Get in touch</a>
+</nav>
+
+<div class="hero">
+    <h1>Stop paying millions for <span class="highlight">solved problems.</span></h1>
+    <p>We migrate companies from MuleSoft to Apache Camel. Same integration patterns. A fraction of the cost. No vendor lock-in.</p>
+    <div class="cta-row">
+        <a href="mailto:kevin@unmule.com" class="btn btn-primary">Book a Free Assessment</a>
+        <a href="#how" class="btn btn-secondary">How It Works</a>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <h3>80%+</h3>
+        <p>Reduction in platform costs</p>
+    </div>
+    <div class="stat">
+        <h3>$0</h3>
+        <p>Runtime licensing fees with Camel</p>
+    </div>
+    <div class="stat">
+        <h3>4 mo</h3>
+        <p>Typical payback period</p>
+    </div>
+</div>
+
+<section class="alt">
+    <div class="inner">
+        <span class="section-label">The Problem</span>
+        <h2 class="section-title">MuleSoft costs are out of control.</h2>
+
+        <div class="problem-grid">
+            <div class="problem-card bad">
+                <h3>What you're living with</h3>
+                <ul>
+                    <li>$350K &ndash; $3M+ in annual licensing</li>
+                    <li>Vendor lock-in to proprietary runtime</li>
+                    <li>Escalating costs at every renewal</li>
+                    <li>Specialized talent that's expensive and scarce</li>
+                    <li>Opaque pricing tied to vCores, not value</li>
+                </ul>
+            </div>
+            <div class="problem-card good">
+                <h3>What life looks like after</h3>
+                <ul>
+                    <li>Open-source runtime, zero licensing fees</li>
+                    <li>Deploy anywhere &mdash; cloud, on-prem, hybrid</li>
+                    <li>Standard Java skills, massive talent pool</li>
+                    <li>Same enterprise integration patterns</li>
+                    <li>You own the code, forever</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how">
+    <span class="section-label">How It Works</span>
+    <h2 class="section-title">Three phases. No surprises.</h2>
+
+    <div class="steps">
+        <div class="step">
+            <span class="step-num">Phase 1</span>
+            <h3>Assess</h3>
+            <p>We audit your MuleSoft estate &mdash; flows, connectors, APIs, dependencies. You get a detailed migration plan with a hard cost estimate and timeline.</p>
+        </div>
+        <div class="step">
+            <span class="step-num">Phase 2</span>
+            <h3>Migrate</h3>
+            <p>We rebuild your integrations in Apache Camel, using automated tooling where possible and expert engineering where it matters. Phased or all-at-once &mdash; your call.</p>
+        </div>
+        <div class="step">
+            <span class="step-num">Phase 3</span>
+            <h3>Operate</h3>
+            <p>Go it alone with your team, or let ours manage your integration platform. Either way, you'll never write another seven-figure check for middleware.</p>
+        </div>
+    </div>
+</section>
+
+<div class="final-cta">
+    <h2>Find out what you'd save.</h2>
+    <p>We'll assess your MuleSoft environment for free and show you exactly what a migration looks like &mdash; timeline, cost, and risk.</p>
+    <a href="mailto:kevin@unmule.com" class="btn btn-primary">Book a Free Assessment</a>
+</div>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+</footer>
+
+</body>
+</html>
