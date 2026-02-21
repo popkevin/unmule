@@ -373,6 +373,63 @@
             color: #dc2626;
         }
 
+        /* Component mapping */
+        .mapping {
+            max-width: 100%;
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .mapping .inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .mapping .section-label { color: var(--accent); }
+
+        .mapping .section-title { color: var(--paper); }
+
+        .mapping-table {
+            width: 100%;
+            margin-top: 2.5rem;
+            border-collapse: collapse;
+        }
+
+        .mapping-table th {
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            padding: 0 0 1rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .mapping-table td {
+            padding: 1rem 1rem 1rem 0;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 0.95rem;
+            vertical-align: top;
+        }
+
+        .mapping-table tr:last-child td { border-bottom: none; }
+
+        .mapping-table td:first-child {
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .mapping-table td:nth-child(2) {
+            font-weight: 600;
+            color: var(--paper);
+        }
+
+        .mapping-table td:nth-child(3) {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -477,6 +534,70 @@
         </div>
     </div>
 </section>
+
+<div class="mapping">
+    <div class="inner">
+        <span class="section-label">The Stack</span>
+        <h2 class="section-title">Every component has a replacement.</h2>
+
+        <table class="mapping-table">
+            <thead>
+                <tr>
+                    <th>MuleSoft</th>
+                    <th>Replacement</th>
+                    <th>Why it's better</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mule Runtime</td>
+                    <td>Apache Camel + Spring Boot</td>
+                    <td>Same integration patterns, zero licensing, deploys anywhere</td>
+                </tr>
+                <tr>
+                    <td>Anypoint Studio</td>
+                    <td>IntelliJ / VS Code + Camel plugin</td>
+                    <td>Tools your devs already know</td>
+                </tr>
+                <tr>
+                    <td>DataWeave</td>
+                    <td>Java / Groovy</td>
+                    <td>Real languages with real debuggers and real talent pools</td>
+                </tr>
+                <tr>
+                    <td>CloudHub</td>
+                    <td>Kubernetes / Docker / any cloud</td>
+                    <td>No proprietary runtime. Deploy where you want.</td>
+                </tr>
+                <tr>
+                    <td>API Manager</td>
+                    <td>Kong / Gravitee / Apache APISIX</td>
+                    <td>Open-source API gateway with rate limiting, auth, analytics</td>
+                </tr>
+                <tr>
+                    <td>Anypoint Exchange</td>
+                    <td>350+ Camel components</td>
+                    <td>Connectors for every major system, protocol, and cloud service</td>
+                </tr>
+                <tr>
+                    <td>Anypoint MQ</td>
+                    <td>RabbitMQ / Kafka / ActiveMQ</td>
+                    <td>Industry-standard messaging you probably already run</td>
+                </tr>
+                <tr>
+                    <td>Anypoint Monitoring</td>
+                    <td>Grafana + Prometheus / OpenTelemetry</td>
+                    <td>Vendor-neutral observability across your entire stack</td>
+                </tr>
+                <tr>
+                    <td>Object Store</td>
+                    <td>Redis / Hazelcast</td>
+                    <td>Battle-tested distributed caching</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="contact" id="contact">
     <div class="contact-grid">
