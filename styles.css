@@ -311,6 +311,53 @@ footer .version {
     font-size: 0.9rem;
 }
 
+/* Advantages section */
+.advantages {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+}
+
+.advantages h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+}
+
+.advantage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.advantage-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.adv-mule,
+.adv-oss {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.adv-mule {
+    background: #fef2f2;
+    border-left: 3px solid #dc2626;
+    color: #7f1d1d;
+}
+
+.adv-oss {
+    background: #f0fdf4;
+    border-left: 3px solid #16a34a;
+    color: #14532d;
+}
+
 /* CTA banner */
 .stack-cta {
     text-align: center;
