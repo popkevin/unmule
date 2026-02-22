@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrating MuleSoft to Kubernetes: A Practical Guide | Unmule</title>
+    <meta name="description" content="A step-by-step guide to migrating from MuleSoft CloudHub to Kubernetes — covering architecture, tooling, cost comparison, and common pitfalls.">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="cta-link">Get in touch</a>
+    </div>
+</nav>
+
+<div class="blog-article">
+    <a href="/blog/" class="blog-back">&larr; Back to Blog</a>
+    <div class="blog-meta">February 2026 &#183; 12 min read</div>
+    <h1>Migrating MuleSoft to Kubernetes: A Practical Guide</h1>
+
+    <div class="blog-body">
+
+        <p>CloudHub is MuleSoft&#8217;s managed deployment platform. It handles container orchestration, scaling, and health monitoring so you don&#8217;t have to. That convenience comes at a steep price: you&#8217;re paying per-vCore for what is essentially managed hosting on top of Kubernetes infrastructure that MuleSoft operates behind the scenes.</p>
+
+        <p>Kubernetes gives you the same deployment capabilities &#8212; auto-scaling, health checks, rolling updates, self-healing &#8212; without per-vCore licensing. You run your integration workloads the same way you run every other service in your organization: as containerized applications on infrastructure you control.</p>
+
+        <p>This post covers how to get from CloudHub to Kubernetes. Not the theory &#8212; the actual steps, tooling decisions, and architecture patterns you need to execute the migration.</p>
+
+        <h2>Why Kubernetes for Integration Workloads</h2>
+
+        <p>If your organization already runs Kubernetes for application workloads, the case for moving integrations onto the same platform is straightforward. You already have the cluster, the ops team, and the deployment tooling. Running MuleSoft separately means maintaining a parallel deployment model with its own scaling rules, monitoring, and cost structure &#8212; all for the privilege of paying Salesforce per-vCore licensing fees.</p>
+
+        <p>Here&#8217;s what Kubernetes gives you that CloudHub charges a premium for:</p>
+
+        <ul>
+            <li><strong>Auto-scaling based on actual load:</strong> Horizontal Pod Autoscaler scales your integration pods based on CPU, memory, or custom metrics. You&#8217;re not reserving vCores you might not use &#8212; you&#8217;re scaling to what you actually need.</li>
+            <li><strong>Pay for compute you actually use:</strong> No per-vCore licensing. You pay your cloud provider for the EC2 instances, GCE VMs, or Azure VMs that run your cluster. Spot instances and reserved pricing bring this even lower.</li>
+            <li><strong>Uniform deployment model:</strong> Your integrations deploy the same way as your APIs, your frontends, and your batch jobs. One CI/CD pipeline, one set of deployment manifests, one monitoring stack.</li>
+            <li><strong>Rolling updates and zero-downtime deployments:</strong> Built into Kubernetes. No CloudHub deployment windows, no restarts that drop in-flight messages.</li>
+            <li><strong>Self-healing:</strong> If a pod crashes, Kubernetes restarts it. If a node goes down, pods get rescheduled to healthy nodes. No support tickets, no manual intervention.</li>
+            <li><strong>Rich ecosystem:</strong> Prometheus, Grafana, Jaeger, Istio, Cert-Manager, External Secrets Operator &#8212; thousands of battle-tested tools that integrate natively with Kubernetes. No vendor lock-in on any of them.</li>
+            <li><strong>Multi-cloud portability:</strong> Your Kubernetes manifests work on EKS (AWS), AKS (Azure), GKE (Google Cloud), or self-managed clusters. Switch cloud providers without rewriting your deployment infrastructure.</li>
+        </ul>
+
+        <p>Your ops team likely already knows Kubernetes. Your developers likely already know Docker. The skills transfer is minimal compared to learning CloudHub&#8217;s proprietary deployment model.</p>
+
+        <h2>The Migration Architecture</h2>
+
+        <p>Here&#8217;s what you&#8217;re building. Each component in the MuleSoft stack has a direct open-source equivalent that runs on Kubernetes:</p>
+
+        <ul>
+            <li><strong>Mule flows &#8594; Apache Camel Spring Boot applications:</strong> Each Mule flow becomes a standalone Spring Boot application with Camel routes. One application per bounded context, deployed independently.</li>
+            <li><strong>CloudHub &#8594; Kubernetes Deployments:</strong> Each Camel application is containerized with Docker and deployed as a Kubernetes Deployment with replica sets, resource limits, and autoscaling.</li>
+            <li><strong>Mule connectors &#8594; Camel components:</strong> Camel has 300+ components covering HTTP, SFTP, JMS, JDBC, Kafka, S3, and virtually every protocol and system you&#8217;re connecting to today.</li>
+            <li><strong>Internal communication &#8594; Kubernetes Services and Ingress:</strong> Service-to-service calls use Kubernetes Services. External traffic routes through an Ingress controller.</li>
+            <li><strong>Mule properties &#8594; ConfigMaps and Secrets:</strong> Configuration externalized to Kubernetes-native resources. Environment-specific values without rebuilding containers.</li>
+            <li><strong>Anypoint MQ &#8594; RabbitMQ or Kafka:</strong> Run on Kubernetes via Helm charts or use a managed service (Amazon MQ, Confluent Cloud, Amazon MSK).</li>
+            <li><strong>API Manager &#8594; Kong or Apache APISIX:</strong> Open-source API gateway running on the same cluster. Rate limiting, auth, request transformation at the gateway level.</li>
+            <li><strong>Anypoint Monitoring &#8594; Prometheus + Grafana:</strong> Metrics scraping, dashboards, and alerting. More flexible and more granular than what Anypoint provides.</li>
+        </ul>
+
+        <p>The result is a system built entirely on open-source components running on infrastructure you control. No vendor lock-in at any layer.</p>
+
+        <h2>Step 1: Flow Inventory and Prioritization</h2>
+
+        <p>Before you write any code, catalog everything. Open your Anypoint Platform and document every Mule application: what it does, what systems it connects to, how much traffic it handles, and who owns it.</p>
+
+        <p>Classify each flow by migration complexity:</p>
+
+        <ul>
+            <li><strong>Simple (stateless REST):</strong> HTTP listener, basic routing, maybe a simple transformation. These map almost 1:1 to Camel REST DSL routes. Migration time: 1&#8211;2 days per flow.</li>
+            <li><strong>Medium (transformations + multiple systems):</strong> DataWeave transforms, calls to 2&#8211;3 external systems, error handling with retry logic. These require <a href="/blog/dataweave-vs-java.html">rewriting DataWeave in Java</a> and mapping Mule connectors to Camel components. Migration time: 3&#8211;5 days per flow.</li>
+            <li><strong>Complex (batch, stateful, saga patterns):</strong> Batch processing modules, Object Store usage, multi-step orchestrations with compensating transactions. These need rearchitecting, not just translating. Migration time: 1&#8211;2 weeks per flow.</li>
+        </ul>
+
+        <p>Prioritize by combining business criticality with migration difficulty. Start with simple, non-critical flows. They let you build confidence, establish patterns, and shake out infrastructure issues without risking production traffic. Complex, critical flows come last &#8212; by then you have proven templates, battle-tested CI/CD, and a team that&#8217;s migrated a dozen flows already.</p>
+
+        <p>See our <a href="/blog/mulesoft-migration-cost.html">migration cost breakdown</a> for per-flow pricing at each complexity level.</p>
+
+        <h2>Step 2: Infrastructure Setup</h2>
+
+        <p>Stand up your Kubernetes foundation before you migrate a single flow. You want the target environment ready and proven before you start moving workloads.</p>
+
+        <h3>Managed Kubernetes</h3>
+
+        <p>Use a managed Kubernetes service unless you have a strong reason not to. Self-managed Kubernetes adds operational overhead that has nothing to do with your integration workloads.</p>
+
+        <ul>
+            <li><strong>EKS (AWS):</strong> Best if your existing infrastructure is on AWS. Native integration with IAM, ALB, ECR, and Secrets Manager.</li>
+            <li><strong>AKS (Azure):</strong> Best for Azure shops. Tight integration with Azure AD, Azure Container Registry, and Key Vault.</li>
+            <li><strong>GKE (Google Cloud):</strong> The most mature managed Kubernetes offering. Autopilot mode further reduces operational burden.</li>
+        </ul>
+
+        <h3>Cluster Sizing</h3>
+
+        <p>Start small. Three nodes with <code>m5.large</code> (2 vCPU, 8 GB RAM) or equivalent is enough to run your first batch of migrated flows plus monitoring infrastructure. You can scale the node pool as you migrate more workloads. Kubernetes makes this trivial &#8212; add nodes, and the scheduler distributes pods automatically.</p>
+
+        <h3>Namespace Strategy</h3>
+
+        <p>One namespace per environment is the simplest approach: <code>dev</code>, <code>staging</code>, <code>prod</code>. Apply resource quotas per namespace to prevent one environment from starving another. If you have multiple teams owning different integrations, consider team-based namespaces within each environment: <code>prod-orders</code>, <code>prod-payments</code>, <code>prod-inventory</code>.</p>
+
+        <h3>CI/CD Pipeline</h3>
+
+        <p>Your pipeline needs to do four things: build the Java application (Maven or Gradle), build the Docker image, push it to a container registry, and apply Kubernetes manifests. GitHub Actions, GitLab CI, or Jenkins all work. Pick whatever your team already uses. A typical pipeline stage looks like this:</p>
+
+        <ol>
+            <li><code>mvn clean package</code> &#8212; build and run tests</li>
+            <li><code>docker build -t your-registry/flow-name:$GIT_SHA .</code> &#8212; containerize</li>
+            <li><code>docker push your-registry/flow-name:$GIT_SHA</code> &#8212; push to ECR/ACR/GCR</li>
+            <li><code>kubectl set image deployment/flow-name flow-name=your-registry/flow-name:$GIT_SHA</code> &#8212; deploy</li>
+        </ol>
+
+        <h3>Secret Management</h3>
+
+        <p>Never store credentials in ConfigMaps, code, or container images. Use Kubernetes Secrets as the baseline, and layer on the External Secrets Operator to sync from your cloud provider&#8217;s secret store (AWS Secrets Manager, Azure Key Vault, HashiCorp Vault). This keeps credentials out of your Git repository and gives you centralized rotation.</p>
+
+        <h2>Step 3: Build the First Camel Application</h2>
+
+        <p>Your first migrated flow is the most important one &#8212; not because of the flow itself, but because it establishes the template every subsequent migration will follow. Invest the time to get this right.</p>
+
+        <h3>Spring Boot Starter Template</h3>
+
+        <p>Create a Spring Boot project with the Camel BOM (Bill of Materials) for dependency management. Core dependencies: <code>camel-spring-boot-starter</code>, <code>camel-http</code>, <code>camel-jackson</code>, and <code>spring-boot-starter-actuator</code>. Add protocol-specific components (SFTP, JMS, Kafka) as each flow requires them.</p>
+
+        <h3>Standard Project Structure</h3>
+
+        <p>Establish a consistent layout across all migrated applications:</p>
+
+        <ul>
+            <li><code>src/main/java/.../routes/</code> &#8212; Camel route definitions</li>
+            <li><code>src/main/java/.../processors/</code> &#8212; Business logic processors</li>
+            <li><code>src/main/java/.../transforms/</code> &#8212; Data transformation classes</li>
+            <li><code>src/main/java/.../config/</code> &#8212; Spring configuration</li>
+            <li><code>src/main/resources/application.yml</code> &#8212; Externalized configuration</li>
+            <li><code>src/test/</code> &#8212; Unit and integration tests</li>
+        </ul>
+
+        <h3>Dockerfile</h3>
+
+        <p>Use a multi-stage build. The first stage compiles with Maven and runs tests. The second stage copies the fat JAR into a minimal JRE image. This keeps your production image small (~150 MB) and secure (no build tools in the runtime image).</p>
+
+        <h3>Kubernetes Manifests</h3>
+
+        <p>Each application needs four manifests at minimum:</p>
+
+        <ul>
+            <li><strong>Deployment:</strong> Replica count, container image, resource requests/limits, environment variables referencing ConfigMaps and Secrets.</li>
+            <li><strong>Service:</strong> ClusterIP service exposing the application port for internal communication.</li>
+            <li><strong>ConfigMap:</strong> Non-sensitive configuration (endpoint URLs, feature flags, timeout values).</li>
+            <li><strong>HorizontalPodAutoscaler:</strong> Scale based on CPU utilization (start with 70% target) or custom metrics like Camel inflight exchange count.</li>
+        </ul>
+
+        <h3>Health Checks</h3>
+
+        <p>Map Spring Boot Actuator endpoints to Kubernetes probes:</p>
+
+        <ul>
+            <li><strong>Liveness probe:</strong> <code>/actuator/health/liveness</code> &#8212; Is the JVM alive? If this fails, Kubernetes restarts the pod.</li>
+            <li><strong>Readiness probe:</strong> <code>/actuator/health/readiness</code> &#8212; Is the application ready to receive traffic? If this fails, Kubernetes removes the pod from service endpoints until it recovers.</li>
+            <li><strong>Startup probe:</strong> Give Spring Boot time to initialize (especially for applications with slow-starting dependencies like database connection pools).</li>
+        </ul>
+
+        <h3>Structured Logging</h3>
+
+        <p>Configure Logback to output JSON-formatted logs. Every log line should include the timestamp, log level, thread name, Camel route ID, and a correlation ID for request tracing. JSON logs are trivially parseable by Loki, Elasticsearch, or any centralized logging system. This is already better than CloudHub&#8217;s logging console.</p>
+
+        <p>This template &#8212; the project structure, Dockerfile, Kubernetes manifests, health checks, and logging configuration &#8212; becomes your blueprint. Every subsequent migration starts by copying this template and replacing the route logic.</p>
+
+        <h2>Step 4: Migrate Flows Incrementally</h2>
+
+        <p>With the template established, migration becomes systematic. Each Mule flow follows the same process:</p>
+
+        <h3>Route Translation</h3>
+
+        <p>Map the Mule flow&#8217;s XML configuration to a Camel route definition. Mule&#8217;s HTTP Listener becomes Camel&#8217;s <code>rest()</code> DSL or a <code>from("netty-http:...")</code> endpoint. Mule&#8217;s Choice router becomes Camel&#8217;s <code>.choice().when().otherwise()</code>. The Enterprise Integration Patterns are the same in both frameworks &#8212; they just use different syntax.</p>
+
+        <h3>Transform Migration</h3>
+
+        <p>DataWeave transforms become Java code using Jackson for JSON manipulation, JAXB or Jackson XML for XML processing, and plain Java for mapping logic. Simple transforms (field renaming, type conversion) are quick. Complex DataWeave scripts with recursive functions and dynamic schema handling take more effort. See our <a href="/blog/dataweave-vs-java.html">DataWeave vs. Java comparison</a> for patterns and examples.</p>
+
+        <h3>Connector Mapping</h3>
+
+        <p>Mule connectors map to Camel components. The major ones:</p>
+
+        <ul>
+            <li>Mule HTTP Connector &#8594; <code>camel-http</code> or <code>camel-netty-http</code></li>
+            <li>Mule SFTP Connector &#8594; <code>camel-ftp</code> (supports SFTP natively)</li>
+            <li>Mule JMS Connector &#8594; <code>camel-jms</code> or <code>camel-amqp</code></li>
+            <li>Mule Database Connector &#8594; <code>camel-jdbc</code> or <code>camel-sql</code></li>
+            <li>Mule Kafka Connector &#8594; <code>camel-kafka</code></li>
+            <li>Mule Salesforce Connector &#8594; <code>camel-salesforce</code></li>
+            <li>Mule File Connector &#8594; <code>camel-file</code></li>
+        </ul>
+
+        <p>Camel has 300+ components. In practice, we&#8217;ve never encountered a Mule connector without a Camel equivalent.</p>
+
+        <h3>Error Handling</h3>
+
+        <p>Mule&#8217;s <code>on-error-propagate</code> and <code>on-error-continue</code> map to Camel&#8217;s <code>onException()</code> with <code>.handled(true/false)</code>. Dead letter channels in Camel work the same conceptually &#8212; failed messages route to an error queue for inspection and reprocessing. Camel&#8217;s error handling is arguably more flexible because you can define exception policies at the route level, the context level, or both.</p>
+
+        <h3>Testing</h3>
+
+        <p>Write tests before you cut over. Camel&#8217;s test framework (<code>camel-test-spring-junit5</code>) lets you mock endpoints, inject test messages, and assert on message bodies and headers. Use <code>@MockEndpoints</code> and <code>AdviceWith</code> to isolate route segments for unit testing. Integration tests hit real test instances of external systems &#8212; your staging database, a test SFTP server, a dev Kafka cluster.</p>
+
+        <h3>Parallel Running</h3>
+
+        <p>For critical flows, run both the MuleSoft and Camel versions simultaneously. Route a copy of production traffic to the Camel application (shadow mode) or split traffic between them (canary deployment). Compare outputs. Once the Camel version produces identical results over a sufficient period &#8212; typically 1&#8211;2 weeks &#8212; cut over traffic entirely and decommission the Mule flow.</p>
+
+        <h2>Step 5: Observability</h2>
+
+        <p>Replacing Anypoint Monitoring is not a sacrifice &#8212; it&#8217;s an upgrade. The open-source observability stack running on Kubernetes gives you more visibility than Anypoint ever did, with no per-seat licensing.</p>
+
+        <h3>Metrics: Prometheus</h3>
+
+        <p>Spring Boot Actuator exposes Camel metrics via the <code>/actuator/prometheus</code> endpoint. Prometheus scrapes these automatically using Kubernetes service discovery. Out of the box you get: route-level throughput, processing latency (mean, p95, p99), error rates, inflight exchange counts, and JVM metrics (heap usage, GC pauses, thread counts).</p>
+
+        <h3>Dashboards: Grafana</h3>
+
+        <p>Build Grafana dashboards for each Camel application. Key panels: requests per second by route, latency distribution, error rate over time, pod CPU and memory utilization, and JVM heap usage. Create a top-level dashboard that shows all integration applications at a glance &#8212; this replaces the Anypoint Runtime Manager view.</p>
+
+        <h3>Alerting</h3>
+
+        <p>Configure Grafana alerts or Prometheus Alertmanager to fire on SLA breaches: error rate above threshold, latency exceeding target, pod restart loops, or disk pressure on persistent volumes. Route alerts to Slack, PagerDuty, or email &#8212; whatever your team already uses for incident response.</p>
+
+        <h3>Distributed Tracing: OpenTelemetry</h3>
+
+        <p>Instrument your Camel applications with OpenTelemetry (Camel has native support via <code>camel-opentelemetry</code>). Traces flow through Jaeger or Grafana Tempo, giving you end-to-end visibility across service boundaries. When a request touches an API gateway, a Camel route, a database, and a downstream HTTP service, you see the full trace with timing for each hop. Anypoint Monitoring doesn&#8217;t give you this.</p>
+
+        <h3>Centralized Logging</h3>
+
+        <p>JSON-formatted logs from all Camel pods flow into Grafana Loki (lightweight, integrates natively with Grafana) or Elasticsearch (more powerful querying, higher operational overhead). Either way, you get centralized search, filtering by application/route/correlation ID, and log-to-trace correlation. Set up log retention policies to manage storage costs.</p>
+
+        <h2>Step 6: API Management</h2>
+
+        <p>If you&#8217;re using Anypoint API Manager for rate limiting, authentication, and API governance, you need a replacement. Two solid open-source options run natively on Kubernetes.</p>
+
+        <h3>Kong (Open Source)</h3>
+
+        <p>Kong deploys as a Kubernetes Ingress controller. It handles rate limiting, key authentication, OAuth2, request/response transformation, and logging at the gateway level. Configuration is declarative via Kubernetes CRDs (Custom Resource Definitions) &#8212; no GUI required, everything lives in version control alongside your application manifests.</p>
+
+        <h3>Apache APISIX</h3>
+
+        <p>APISIX is a high-performance alternative to Kong with a similar feature set. It&#8217;s particularly strong on dynamic routing and plugin extensibility. Both are solid choices &#8212; pick whichever has better community support for your specific requirements.</p>
+
+        <h3>API Documentation</h3>
+
+        <p>Replace RAML specs in Anypoint Exchange with OpenAPI (Swagger) specifications. Camel can auto-generate OpenAPI specs from your REST DSL route definitions. Host API docs on a developer portal (Kong Developer Portal, Backstage, or even a static site generated from your OpenAPI specs).</p>
+
+        <p>See our <a href="/stack/api-gateway.html">API gateway comparison page</a> for a detailed breakdown of Kong, APISIX, and other options.</p>
+
+        <h2>Cost Comparison: CloudHub vs. Kubernetes</h2>
+
+        <p>This is where the math gets compelling. Let&#8217;s compare a typical deployment: 8 vCores on CloudHub with a Platinum-tier Anypoint subscription.</p>
+
+        <h3>CloudHub Cost</h3>
+
+        <ul>
+            <li>8 vCores at $50K&#8211;$70K per vCore: <strong>$400K&#8211;$560K/year</strong> (licensing alone)</li>
+            <li>Platform subscription: <strong>$150K&#8211;$200K/year</strong></li>
+            <li>Premium connectors, premium support: <strong>$50K&#8211;$100K/year</strong></li>
+            <li><strong>Total: $600K&#8211;$860K/year</strong></li>
+        </ul>
+
+        <h3>Kubernetes Cost (EKS Example)</h3>
+
+        <ul>
+            <li>3x <code>m5.xlarge</code> nodes on-demand (4 vCPU, 16 GB each): <strong>~$16K/year</strong></li>
+            <li>EKS control plane: <strong>~$2.5K/year</strong></li>
+            <li>Monitoring stack (Prometheus/Grafana on-cluster): <strong>~$0</strong> (runs on existing nodes)</li>
+            <li>Container registry (ECR): <strong>~$500/year</strong></li>
+            <li>CI/CD (GitHub Actions): <strong>~$2K/year</strong></li>
+            <li><strong>Total: ~$21K/year</strong></li>
+        </ul>
+
+        <p>With reserved instances or savings plans, the compute cost drops to roughly <strong>$10K/year</strong>, bringing the total under <strong>$15K/year</strong>.</p>
+
+        <p>The difference is staggering: <strong>$600K&#8211;$860K vs. $15K&#8211;$21K</strong>. Even accounting for the one-time migration cost, you break even within months, not years. The ongoing savings are pure licensing margin that Salesforce was capturing and you&#8217;re now keeping.</p>
+
+        <p><a href="/calculator.html">Run your own numbers through our savings calculator</a> to see the comparison for your specific deployment size.</p>
+
+        <h2>Common Pitfalls</h2>
+
+        <p>We&#8217;ve done enough of these migrations to know where teams get into trouble. Avoid these mistakes:</p>
+
+        <ul>
+            <li><strong>Don&#8217;t migrate everything at once.</strong> A phased migration is safer. Move 2&#8211;3 simple flows first, prove the pattern, then accelerate. A big-bang migration creates too many variables to debug when something goes wrong.</li>
+            <li><strong>Don&#8217;t skip parallel running for critical flows.</strong> Shadow traffic or canary deployments cost a few extra days of work but prevent production incidents that cost far more. Run both systems, compare outputs, then cut over.</li>
+            <li><strong>Don&#8217;t forget non-functional requirements.</strong> Rate limits, circuit breakers, retry policies, timeout configurations &#8212; these exist in your Mule flows for a reason. Map them to the Camel equivalents (Camel has built-in circuit breaker, retry, and throttle EIPs) or handle them at the API gateway level.</li>
+            <li><strong>Don&#8217;t under-invest in monitoring.</strong> Set up Prometheus, Grafana, and alerting <em>before</em> you migrate the first flow. You want observability in place when traffic starts flowing through Camel, not after something breaks and you&#8217;re debugging blind.</li>
+            <li><strong>Don&#8217;t ignore secret management.</strong> No credentials in ConfigMaps, no credentials in source code, no credentials in Docker images. Use Kubernetes Secrets with the External Secrets Operator from day one. Retrofitting proper secret management after you&#8217;ve already deployed is painful and risky.</li>
+            <li><strong>Don&#8217;t undersize your initial cluster.</strong> Three <code>m5.large</code> nodes is a reasonable starting point, but monitor resource utilization from the beginning. Running out of CPU or memory during migration creates unnecessary production risk.</li>
+            <li><strong>Don&#8217;t neglect knowledge transfer.</strong> If only one person on your team understands the new Kubernetes-based stack, you&#8217;ve traded vendor lock-in for people lock-in. Document architecture decisions, write operational runbooks, and pair on the early migrations so knowledge spreads across the team.</li>
+        </ul>
+
+        <h2>Getting Started</h2>
+
+        <p>The migration from CloudHub to Kubernetes is not a leap of faith. It&#8217;s a well-understood pattern that thousands of organizations have executed. The tools are mature, the architecture patterns are proven, and the cost savings are unambiguous.</p>
+
+        <p>Start with the assessment. Catalog your flows, classify by complexity, and build a phased migration plan. Set up your Kubernetes cluster and CI/CD pipeline. Migrate a simple flow end-to-end to prove the pattern. Then accelerate.</p>
+
+        <p>The hardest part is not the technology &#8212; it&#8217;s the decision to start. Every month you delay is another month of vCore licensing fees you didn&#8217;t need to pay.</p>
+
+    </div>
+
+    <div class="blog-cta">
+        <h3>Ready to move to Kubernetes?</h3>
+        <a href="/calculator.html" class="btn btn-secondary" style="margin-right: 0.75rem;">Estimate Your Savings</a>
+        <a href="/#contact" class="btn btn-primary">Book a Free Assessment</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+    <span class="version">v2026.02.22b</span>
+</footer>
+
+</body>
+</html>

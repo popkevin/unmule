@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuleSoft vCore Pricing Explained | Unmule</title>
+    <meta name="description" content="MuleSoft vCore pricing explained — what a vCore actually is, how much it costs, how many you need, and why the model is expensive compared to cloud-native compute.">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="cta-link">Get in touch</a>
+    </div>
+</nav>
+
+<div class="blog-article">
+    <a href="/blog/" class="blog-back">&larr; Back to Blog</a>
+    <div class="blog-meta">February 2026 &#183; 9 min read</div>
+    <h1>MuleSoft vCore Pricing Explained: What You&#8217;re Actually Paying For</h1>
+
+    <div class="blog-body">
+
+        <p>If you&#8217;re evaluating MuleSoft or trying to make sense of your existing contract, the first thing you need to understand is vCores. They&#8217;re the unit of compute that MuleSoft uses to meter your usage on CloudHub, and they&#8217;re the single biggest driver of your annual spend. Understanding how vCore pricing works &#8212; what you&#8217;re getting, what you&#8217;re not getting, and how the economics compare to alternatives &#8212; is essential for budgeting and for evaluating whether a <a href="/blog/mulesoft-migration-cost.html">migration</a> makes financial sense.</p>
+
+        <p>This post breaks down the vCore model in detail: the technical definition, the actual dollar amounts, how to estimate what you need, and why the pricing structure creates a cost trap that gets worse over time.</p>
+
+        <h2>What Is a vCore?</h2>
+
+        <p>A vCore is a virtual CPU core allocated to your Mule application when it runs on CloudHub, Salesforce&#8217;s managed hosting platform. When you deploy a Mule application, you assign it a &#8220;worker&#8221; &#8212; and the size of that worker is measured in vCores. Each worker size comes with a fixed amount of memory:</p>
+
+        <ul>
+            <li><strong>0.1 vCore:</strong> 512 MB RAM</li>
+            <li><strong>0.2 vCore:</strong> 1 GB RAM</li>
+            <li><strong>1 vCore:</strong> 1.5 GB RAM</li>
+            <li><strong>2 vCores:</strong> 3.5 GB RAM</li>
+            <li><strong>4 vCores:</strong> 7.5 GB RAM</li>
+        </ul>
+
+        <p>The key thing to understand is that you&#8217;re paying for <strong>reserved capacity</strong>, not actual usage. When you assign a 1-vCore worker to an application, that vCore is allocated to you whether the application processes 10,000 transactions per hour or zero. The meter runs whether you&#8217;re using it or not.</p>
+
+        <p>This is fundamentally different from how cloud-native compute pricing works. On AWS, GCP, or Azure, you can run containers that auto-scale based on demand and pay only for the CPU seconds you actually consume. With MuleSoft, you&#8217;re buying a fixed reservation and paying for it around the clock, regardless of utilization.</p>
+
+        <h2>How Much Does a vCore Cost?</h2>
+
+        <p>MuleSoft doesn&#8217;t publish a price list. Pricing is negotiated per contract, and Salesforce reps will tell you it &#8220;depends on your needs.&#8221; But after working with dozens of companies on their MuleSoft contracts, here&#8217;s what the actual numbers look like.</p>
+
+        <h3>CloudHub Pricing</h3>
+
+        <p>For CloudHub &#8212; MuleSoft&#8217;s fully managed hosting &#8212; the typical range is <strong>$50,000 to $70,000 per vCore per year</strong>. Where you land within that band depends on several factors:</p>
+
+        <ul>
+            <li><strong>Volume commitments:</strong> Committing to 10 or more vCores might get you a 10&#8211;15% discount off list price. The more vCores you commit to, the more leverage you have &#8212; but you&#8217;re also locking yourself into a larger spend.</li>
+            <li><strong>Contract length:</strong> Three-year commitments typically get 15&#8211;25% better rates than annual contracts. Salesforce loves multi-year deals because they lock in revenue. You get a lower per-vCore rate, but you&#8217;re committing to years of spend you may not need.</li>
+            <li><strong>Negotiation floor:</strong> Salesforce reps have pricing authority within a range, but there&#8217;s a floor they can&#8217;t go below. Even the best negotiator isn&#8217;t getting CloudHub vCores for $30K a year. The floor is real and it&#8217;s high.</li>
+        </ul>
+
+        <h3>Runtime Fabric Pricing</h3>
+
+        <p>Runtime Fabric is MuleSoft&#8217;s self-managed option &#8212; you provide the underlying Kubernetes infrastructure and MuleSoft provides the runtime layer. vCore pricing for Runtime Fabric is typically <strong>$30,000 to $40,000 per vCore per year</strong>. That&#8217;s cheaper than CloudHub on the license line, but you also need to factor in the cost of running and managing the underlying Kubernetes cluster yourself. Once you add infrastructure and ops overhead, the total cost difference narrows.</p>
+
+        <h3>Renewal Pricing</h3>
+
+        <p>Here&#8217;s the number most teams don&#8217;t plan for: <strong>renewal pricing almost always increases 5&#8211;8% per year</strong>. Your initial contract might be negotiated competitively, especially if Salesforce is trying to win your business. But once you&#8217;re deployed, migrated onto the platform, and your team has learned the tooling, your negotiating leverage drops substantially. Salesforce knows this, and the renewal quotes reflect it. Over a five-year horizon, that compounding uplift turns a $60K-per-vCore deal into a $78K-per-vCore deal &#8212; without you adding a single new application.</p>
+
+        <h2>How Many vCores Do You Actually Need?</h2>
+
+        <p>Understanding per-vCore pricing is only half the equation. You also need to know how many vCores your deployment requires. Here&#8217;s a practical sizing guide based on what we see across client environments:</p>
+
+        <ul>
+            <li><strong>Simple HTTP proxy or passthrough:</strong> 0.1&#8211;0.2 vCores. These are your basic routes that forward requests from one system to another with minimal transformation.</li>
+            <li><strong>Standard API implementation:</strong> 0.5&#8211;1 vCore. A typical REST API that does some data mapping, validation, and maybe connects to one or two backend systems.</li>
+            <li><strong>Heavy transformation or integration:</strong> 1&#8211;2 vCores. Flows with complex <a href="/blog/dataweave-vs-java.html">DataWeave transformations</a>, multi-step orchestration, or integrations that coordinate across several systems.</li>
+            <li><strong>High-throughput batch processing:</strong> 2&#8211;4 vCores. Bulk data processing jobs &#8212; nightly syncs, large file imports, batch ETL operations &#8212; that need sustained compute capacity.</li>
+        </ul>
+
+        <p>Most companies we work with end up running <strong>4 to 16 vCores</strong> across all their applications. But that&#8217;s just the production number.</p>
+
+        <p>Here&#8217;s what catches people: CloudHub requires minimum worker sizes per environment, and you typically need separate environments for development, staging, and production. That means you often need <strong>2 to 3 times your production vCores</strong> to cover your lower environments. If you&#8217;re running 6 vCores in production, you might need 4 more in staging and 2&#8211;4 in development. Suddenly your 6-vCore deployment is actually a 12&#8211;14-vCore commitment.</p>
+
+        <h2>The vCore Trap</h2>
+
+        <p>The vCore pricing model creates a cost structure that works against you in several ways. Understanding these dynamics is important whether you&#8217;re negotiating a new contract or evaluating whether to <a href="/blog/reduce-mulesoft-costs.html">reduce your current spend</a>.</p>
+
+        <p><strong>You pay for idle capacity.</strong> If your API handles 10 requests per hour at 3 AM, you&#8217;re still paying for the full vCore. There&#8217;s no way to scale down to zero or even to a fraction of a vCore during off-peak hours. You&#8217;re paying peak pricing around the clock.</p>
+
+        <p><strong>Scaling means buying more vCores.</strong> CloudHub doesn&#8217;t have auto-scaling that reduces cost. You can add workers to handle more load, but each additional worker consumes vCores from your allocation. There&#8217;s no &#8220;burst&#8221; capacity that lets you handle traffic spikes without a permanent vCore commitment. If you need to handle Black Friday traffic, you need to buy enough vCores to cover the peak &#8212; and pay for them the other 364 days of the year.</p>
+
+        <p><strong>Lower environments consume vCores too.</strong> Every developer working on a flow, every QA environment running regression tests, every staging deployment validating a release &#8212; they all consume vCores from the same pool. This is compute that delivers zero business value but can easily account for 40&#8211;60% of your total vCore allocation.</p>
+
+        <p><strong>You can&#8217;t easily downsize mid-contract.</strong> If you commit to 12 vCores on a three-year deal and then consolidate your flows to only need 8, you&#8217;re still paying for 12. MuleSoft contracts don&#8217;t have a &#8220;return unused vCores&#8221; clause. You might be able to negotiate adjustments at renewal, but that&#8217;s 1&#8211;3 years of paying for capacity you don&#8217;t use.</p>
+
+        <p><strong>The pricing doesn&#8217;t scale linearly with value.</strong> Doubling your vCores doesn&#8217;t double the business value of your integrations. But it does double the cost. As your integration needs grow, the gap between what you&#8217;re paying and the value you&#8217;re receiving widens.</p>
+
+        <p>Compare this to Kubernetes: a pod scales up when traffic increases and scales back down when it subsides. You pay for actual compute consumption. Development environments can share cluster resources. There&#8217;s no per-application licensing overhead. The pricing model naturally aligns cost with usage.</p>
+
+        <h2>vCore Pricing vs. Cloud-Native Compute</h2>
+
+        <p>Let&#8217;s make the comparison concrete. Take a typical mid-size deployment running 4 MuleSoft vCores in production:</p>
+
+        <ul>
+            <li><strong>4 MuleSoft vCores on CloudHub:</strong> $200K&#8211;$280K per year. This is just the vCore cost &#8212; it doesn&#8217;t include the Anypoint Platform subscription, premium connectors, or support fees. For the <a href="/blog/mulesoft-pricing-2026.html">full pricing picture</a>, those add substantially more.</li>
+            <li><strong>Equivalent compute on AWS EKS (4 vCPU nodes, on-demand):</strong> $4K&#8211;$8K per year. This is the raw infrastructure cost for running the same amount of compute on managed Kubernetes.</li>
+            <li><strong>With managed overhead (monitoring, CI/CD, API gateway, ops):</strong> $15K&#8211;$25K per year. Even when you add Prometheus, Grafana, a CI/CD pipeline, and an open-source API gateway like Kong, the fully-loaded cost is a fraction of the vCore spend.</li>
+        </ul>
+
+        <p>The gap is staggering &#8212; roughly <strong>10x to 20x</strong> &#8212; and it exists because you&#8217;re not paying for compute. You&#8217;re paying for the MuleSoft software license. The compute itself is a small fraction of the vCore price. The rest is Salesforce&#8217;s margin.</p>
+
+        <p>You can <a href="/calculator.html">model this with your own numbers</a> to see what the difference looks like for your specific deployment.</p>
+
+        <h2>How to Reduce Your vCore Spend</h2>
+
+        <p>If you&#8217;re looking to bring your vCore costs down &#8212; whether as a short-term optimization or as a step toward <a href="/blog/reduce-mulesoft-costs.html">broader cost reduction</a> &#8212; here are the most effective levers:</p>
+
+        <p><strong>Audit utilization.</strong> Pull the monitoring data from Anypoint and look at actual CPU and memory utilization per worker. In most environments we assess, a significant number of vCores run at less than 20% utilization. You may be able to downsize workers without any impact on performance. This is the lowest-effort optimization available.</p>
+
+        <p><strong>Consolidate applications.</strong> Multiple small applications each running on their own 0.1- or 0.2-vCore workers can sometimes be consolidated onto fewer, larger workers. This reduces the total number of workers and can free up vCore allocations. Be careful with this one &#8212; there are legitimate isolation reasons for separate workers &#8212; but when flows are logically related and low-traffic, consolidation often makes sense.</p>
+
+        <p><strong>Use Runtime Fabric if you have existing infrastructure.</strong> If your organization already runs Kubernetes clusters with available capacity, moving from CloudHub to Runtime Fabric can cut the per-vCore licensing cost by 30&#8211;40%. You take on more operational responsibility, but if you already have the infrastructure team and the clusters, the marginal cost is lower.</p>
+
+        <p><strong>Negotiate multi-year commitments.</strong> If you&#8217;re staying on MuleSoft for the foreseeable future, a multi-year deal gives you leverage to negotiate 15&#8211;25% better per-vCore rates. This only makes sense if you&#8217;re confident in your commitment. Locking into three years of vCore spend to save 20% isn&#8217;t a good deal if you end up migrating in year two.</p>
+
+        <p><strong>Or: eliminate vCore costs entirely.</strong> Migrate your integrations to open-source runtimes like Apache Camel on Kubernetes, and vCore pricing becomes irrelevant. There&#8217;s no per-application compute license. You pay for infrastructure at commodity cloud rates. The <a href="/blog/mulesoft-migration-cost.html">migration investment</a> typically pays for itself within 12 months through eliminated licensing alone.</p>
+
+        <p>The path you choose depends on your timeline and appetite for change. Optimization buys you time and savings within the MuleSoft ecosystem. Migration eliminates the cost model entirely. For a deeper look at the full range of options, see our guide on <a href="/blog/reduce-mulesoft-costs.html">reducing MuleSoft costs</a>.</p>
+
+    </div>
+
+    <div class="blog-cta">
+        <h3>Calculate what you&#8217;d save without vCore fees</h3>
+        <a href="/calculator.html" class="btn btn-secondary" style="margin-right: 0.75rem;">Try the Calculator</a>
+        <a href="/#contact" class="btn btn-primary">Book a Free Assessment</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+    <span class="version">v2026.02.22b</span>
+</footer>
+
+</body>
+</html>
