@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuleSoft Cost Calculator | Unmule</title>
+    <meta name="description" content="Estimate your annual savings from migrating off MuleSoft to open-source integration tools. Compare licensing, infrastructure, and operational costs side by side.">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="cta-link">Get in touch</a>
+    </div>
+</nav>
+
+<div class="calc-hero">
+    <h1>Estimate Your <span class="highlight">MuleSoft Savings</span></h1>
+    <p class="subtitle">See how much your organization could save annually by migrating from MuleSoft to a modern open-source integration stack.</p>
+</div>
+
+<div class="calc-container">
+    <div class="calc-inputs">
+        <div class="calc-input">
+            <label for="vcores">vCores</label>
+            <select id="vcores" onchange="calculate()">
+                <option value="2">2</option>
+                <option value="4" selected>4</option>
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+            </select>
+        </div>
+        <div class="calc-input">
+            <label for="connectors">Premium Connectors</label>
+            <input type="range" id="connectors" min="0" max="10" value="2" oninput="calculate()">
+            <div class="range-value" id="connectors-value">2</div>
+        </div>
+        <div class="calc-input">
+            <label for="apps">Applications / Flows</label>
+            <input type="range" id="apps" min="1" max="50" value="10" oninput="calculate()">
+            <div class="range-value" id="apps-value">10</div>
+        </div>
+    </div>
+
+    <div class="calc-results">
+        <div class="calc-card mule">
+            <div class="calc-label">MuleSoft Annual Cost</div>
+            <div class="calc-amount" id="mule-total"></div>
+            <div class="calc-breakdown" id="mule-breakdown"></div>
+        </div>
+        <div class="calc-card oss">
+            <div class="calc-label">Open-Source Annual Cost</div>
+            <div class="calc-amount" id="oss-total"></div>
+            <div class="calc-breakdown" id="oss-breakdown"></div>
+        </div>
+        <div class="calc-card savings">
+            <div class="calc-label">Your Annual Savings</div>
+            <div class="calc-amount" id="savings-total"></div>
+            <div class="calc-breakdown" id="savings-breakdown"></div>
+        </div>
+    </div>
+
+    <p class="calc-disclaimer">These estimates are based on typical MuleSoft list pricing and standard cloud infrastructure costs. Actual costs vary by contract terms, deployment complexity, and cloud provider. Contact us for a precise assessment based on your environment.</p>
+
+    <div class="calc-cta">
+        <h2>Ready for a real estimate?</h2>
+        <p>Get a personalized cost assessment based on your actual MuleSoft deployment, contract terms, and infrastructure requirements.</p>
+        <a href="/#contact" class="btn btn-primary">Book a Free Assessment</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+    <span class="version">v2026.02.22b</span>
+</footer>
+
+<script>
+function calculate() {
+    var vcores = parseInt(document.getElementById('vcores').value);
+    var connectors = parseInt(document.getElementById('connectors').value);
+    var apps = parseInt(document.getElementById('apps').value);
+
+    // Update range display values
+    document.getElementById('connectors-value').textContent = connectors;
+    document.getElementById('apps-value').textContent = apps;
+
+    // MuleSoft costs
+    var muleBase = 25000;
+    var muleVcore = 50000 * vcores;
+    var muleConnectors = 15000 * connectors;
+    var muleTotal = muleBase + muleVcore + muleConnectors;
+
+    // Open-source costs
+    var ossBase = 5000;
+    var ossCompute = 3000 * vcores;
+    var ossMonitoring = 5000;
+    var ossCICD = 2000;
+    var ossTotal = ossBase + ossCompute + ossMonitoring + ossCICD;
+
+    // Savings
+    var savings = muleTotal - ossTotal;
+    var pct = Math.round((savings / muleTotal) * 100);
+
+    // Format helper
+    function fmt(n) {
+        return '$' + n.toLocaleString();
+    }
+
+    // MuleSoft card
+    document.getElementById('mule-total').textContent = fmt(muleTotal);
+    document.getElementById('mule-breakdown').innerHTML =
+        'Base platform: ' + fmt(muleBase) + '<br>' +
+        'vCore licensing: ' + fmt(muleVcore) + '<br>' +
+        'Connector fees: ' + fmt(muleConnectors);
+
+    // Open-source card
+    document.getElementById('oss-total').textContent = fmt(ossTotal);
+    document.getElementById('oss-breakdown').innerHTML =
+        'Base infrastructure: ' + fmt(ossBase) + '<br>' +
+        'Compute ($3K/vCore): ' + fmt(ossCompute) + '<br>' +
+        'Monitoring: $5,000<br>' +
+        'CI/CD: $2,000';
+
+    // Savings card
+    document.getElementById('savings-total').textContent = fmt(savings);
+    document.getElementById('savings-breakdown').textContent =
+        pct + '% reduction in annual integration costs';
+}
+
+calculate();
+</script>
+</body>
+</html>

@@ -558,6 +558,81 @@
             border-top: 1px solid var(--border);
         }
 
+        /* Nav links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover { color: var(--ink); }
+
+        .nav-links a.cta-link {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-links a.cta-link:hover { text-decoration: underline; }
+
+        /* Case study */
+        .case-study {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .case-study-quote {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            max-width: 700px;
+            border-left: 4px solid var(--accent);
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .case-study-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .cs-metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f4f3f1;
+            border-radius: 8px;
+        }
+
+        .cs-metric .cs-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.03em;
+        }
+
+        .cs-metric .cs-label {
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .case-study-narrative {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .problem-grid, .steps, .contact-grid, .cost-tables {
@@ -567,6 +642,9 @@
             .hero { padding: 4rem 1.5rem 3rem; }
             .stats { padding: 0 1.5rem 3rem; }
             section { padding: 3rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.85rem; }
+            .case-study-metrics { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -574,7 +652,11 @@
 
 <nav>
     <a href="/" class="logo">un<span>mule</span></a>
-    <a href="#contact" class="cta-link">Get in touch</a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/blog/">Blog</a>
+        <a href="#contact" class="cta-link">Get in touch</a>
+    </div>
 </nav>
 
 <div class="hero">
@@ -582,7 +664,7 @@
     <p>We migrate companies from MuleSoft to Apache Camel. Same integration patterns. A fraction of the cost. No vendor lock-in.</p>
     <div class="cta-row">
         <a href="#contact" class="btn btn-primary">Book a Free Assessment</a>
-        <a href="#how" class="btn btn-secondary">How It Works</a>
+        <a href="/calculator.html" class="btn btn-secondary">Estimate Your Savings</a>
     </div>
 </div>
 
@@ -710,6 +792,7 @@
     </div>
 
     <p class="cost-note">Based on a mid-size deployment with 10 MuleSoft vCores. MuleSoft pricing varies by contract; figures represent typical list pricing. Cloud infrastructure costs assume on-demand pricing without reserved instances (which would be even cheaper).</p>
+    <p style="text-align: center; margin-top: 2rem;"><a href="/calculator.html" class="btn btn-secondary">Try the Calculator with Your Numbers</a></p>
 </div>
 
 <div class="mapping" id="stack">
@@ -776,6 +859,36 @@
     </div>
 </div>
 
+<div class="case-study" id="results">
+    <span class="section-label">Real Results</span>
+    <h2 class="section-title" style="margin-bottom: 2rem;">What a migration actually looks like.</h2>
+
+    <blockquote class="case-study-quote">
+        &ldquo;We were spending $200K a year on MuleSoft licensing for problems our Java team could solve with open-source tools. The migration paid for itself before the first renewal came due.&rdquo;
+    </blockquote>
+
+    <div class="case-study-metrics">
+        <div class="cs-metric">
+            <div class="cs-num">15</div>
+            <div class="cs-label">Mule flows migrated</div>
+        </div>
+        <div class="cs-metric">
+            <div class="cs-num">4 mo</div>
+            <div class="cs-label">Migration timeline</div>
+        </div>
+        <div class="cs-metric">
+            <div class="cs-num">$200K</div>
+            <div class="cs-label">Annual savings</div>
+        </div>
+        <div class="cs-metric">
+            <div class="cs-num">0</div>
+            <div class="cs-label">Mule devs needed</div>
+        </div>
+    </div>
+
+    <p class="case-study-narrative">A mid-market consumer products company (~$150M revenue, ~300 employees) was running 15 MuleSoft flows handling order management, inventory sync across three warehouses, and partner EDI. They had three specialized Mule developers on staff just to maintain the platform. We migrated everything to Apache Camel on Kubernetes over four months &mdash; phased by business criticality, with parallel running to validate correctness. Their existing Java team now maintains all integrations. The three Mule-specialized roles were redeployed to product engineering. Total annual savings: $200K in licensing alone, plus the recovered engineering capacity.</p>
+</div>
+
 <div class="contact" id="contact">
     <div class="contact-grid">
         <div class="contact-text">
@@ -831,7 +944,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
 
 <footer>
     &copy; 2026 Unmule. All rights reserved.
-    <span class="version">v2026.02.22a</span>
+    <span class="version">v2026.02.22b</span>
 </footer>
 
 </body>
