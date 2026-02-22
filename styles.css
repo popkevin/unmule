@@ -337,25 +337,26 @@ footer .version {
     gap: 0;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
 .adv-mule,
 .adv-oss {
-    padding: 0.75rem 1.25rem;
+    padding: 0.85rem 1.25rem 0.85rem 1.5rem;
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
 .adv-mule {
     background: #fef2f2;
-    border-left: 3px solid #dc2626;
-    color: #7f1d1d;
+    border-left: 4px solid #dc2626;
+    color: #991b1b;
 }
 
 .adv-oss {
-    background: #f0fdf4;
-    border-left: 3px solid #16a34a;
-    color: #14532d;
+    background: #ecfdf5;
+    border-left: 4px solid #16a34a;
+    color: #166534;
 }
 
 /* CTA banner */
