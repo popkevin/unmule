@@ -65,7 +65,23 @@
         </div>
     </div>
 
-    <p class="calc-disclaimer">These estimates are based on typical MuleSoft list pricing and standard cloud infrastructure costs. Actual costs vary by contract terms, deployment complexity, and cloud provider. Contact us for a precise assessment based on your environment.</p>
+    <div class="calc-migration">
+        <div class="calc-label">Migration Investment &amp; Break-Even</div>
+        <div class="migration-row">
+            <div class="migration-stat">
+                <div class="calc-amount" id="migration-cost"></div>
+                <div class="stat-label">One-time migration cost</div>
+            </div>
+            <div class="migration-arrow">&rarr;</div>
+            <div class="migration-stat">
+                <div class="calc-amount accent" id="breakeven"></div>
+                <div class="stat-label">Break-even point</div>
+            </div>
+        </div>
+        <p class="migration-note" id="migration-note"></p>
+    </div>
+
+    <p class="calc-disclaimer">These estimates are based on typical MuleSoft list pricing and standard cloud infrastructure costs. Migration cost is approximately half of one year's MuleSoft spend. Actual costs vary by contract terms, deployment complexity, and cloud provider. Contact us for a precise assessment based on your environment.</p>
 
     <div class="calc-cta">
         <h2>Ready for a real estimate?</h2>
@@ -130,6 +146,19 @@ function calculate() {
     document.getElementById('savings-total').textContent = fmt(savings);
     document.getElementById('savings-breakdown').textContent =
         pct + '% reduction in annual integration costs';
+
+    // Migration investment (approx half of MuleSoft annual cost)
+    var migrationCost = Math.round(muleTotal * 0.5);
+    var monthlySavings = savings / 12;
+    var breakevenMonths = Math.ceil(migrationCost / monthlySavings);
+
+    document.getElementById('migration-cost').textContent = fmt(migrationCost);
+    document.getElementById('breakeven').textContent = '~' + breakevenMonths + ' months';
+    document.getElementById('migration-note').textContent =
+        'Migration typically costs about half your annual MuleSoft spend. ' +
+        'At ' + fmt(Math.round(monthlySavings)) + '/month in savings, ' +
+        'the investment pays for itself in ' + breakevenMonths + ' months. ' +
+        'After that, you save ' + fmt(savings) + ' every year.';
 }
 
 calculate();
