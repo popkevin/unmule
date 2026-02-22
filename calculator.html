@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MuleSoft Cost Calculator | Unmule</title>
-    <meta name="description" content="Estimate your annual savings from migrating off MuleSoft to open-source integration tools. Compare licensing, infrastructure, and operational costs side by side.">
+    <meta name="description" content="Estimate your annual savings from migrating off MuleSoft to open-source integration tools. Compare vCore and flow-based pricing models side by side.">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -24,7 +24,12 @@
 </div>
 
 <div class="calc-container">
-    <div class="calc-inputs">
+    <div class="calc-toggle">
+        <button id="btn-vcore" class="active" onclick="setModel('vcore')">vCore Model (Legacy)</button>
+        <button id="btn-flow" onclick="setModel('flow')">Flow Model (New)</button>
+    </div>
+
+    <div class="calc-inputs" id="inputs-vcore">
         <div class="calc-input">
             <label for="vcores">vCores</label>
             <select id="vcores" onchange="calculate()">
@@ -41,9 +46,29 @@
             <div class="range-value" id="connectors-value">2</div>
         </div>
         <div class="calc-input">
-            <label for="apps">Applications / Flows</label>
-            <input type="range" id="apps" min="1" max="50" value="10" oninput="calculate()">
-            <div class="range-value" id="apps-value">10</div>
+            <label for="apps-vcore">Applications / Flows</label>
+            <input type="range" id="apps-vcore" min="1" max="50" value="10" oninput="calculate()">
+            <div class="range-value" id="apps-vcore-value">10</div>
+        </div>
+    </div>
+
+    <div class="calc-inputs" id="inputs-flow" style="display: none;">
+        <div class="calc-input">
+            <label for="tier">MuleSoft Tier</label>
+            <select id="tier" onchange="calculate()">
+                <option value="starter">Starter (50 flows, 5M msgs)</option>
+                <option value="advanced" selected>Advanced (200 flows, 20M msgs)</option>
+            </select>
+        </div>
+        <div class="calc-input">
+            <label for="flows">Flows</label>
+            <input type="range" id="flows" min="5" max="200" value="30" oninput="calculate()">
+            <div class="range-value" id="flows-value">30</div>
+        </div>
+        <div class="calc-input">
+            <label for="messages">Messages / Month (millions)</label>
+            <input type="range" id="messages" min="1" max="20" value="2" oninput="calculate()">
+            <div class="range-value" id="messages-value">2M</div>
         </div>
     </div>
 
@@ -81,7 +106,7 @@
         <p class="migration-note" id="migration-note"></p>
     </div>
 
-    <p class="calc-disclaimer">These estimates are based on typical MuleSoft list pricing and standard cloud infrastructure costs. Migration cost is approximately half of one year's MuleSoft spend. Actual costs vary by contract terms, deployment complexity, and cloud provider. Contact us for a precise assessment based on your environment.</p>
+    <p class="calc-disclaimer">These estimates are based on typical MuleSoft list pricing and standard cloud infrastructure costs. MuleSoft does not publish pricing for the new flow-based model &mdash; our estimates are derived from reported contract values and industry sources. Migration cost is approximately half of one year&rsquo;s MuleSoft spend. Actual costs vary by contract terms, deployment complexity, and cloud provider. Contact us for a precise assessment based on your environment.</p>
 
     <div class="calc-cta">
         <h2>Ready for a real estimate?</h2>
@@ -96,58 +121,132 @@
 </footer>
 
 <script>
+var model = 'vcore';
+
+function setModel(m) {
+    model = m;
+    document.getElementById('btn-vcore').className = m === 'vcore' ? 'active' : '';
+    document.getElementById('btn-flow').className = m === 'flow' ? 'active' : '';
+    document.getElementById('inputs-vcore').style.display = m === 'vcore' ? '' : 'none';
+    document.getElementById('inputs-flow').style.display = m === 'flow' ? '' : 'none';
+    calculate();
+}
+
 function calculate() {
-    var vcores = parseInt(document.getElementById('vcores').value);
-    var connectors = parseInt(document.getElementById('connectors').value);
-    var apps = parseInt(document.getElementById('apps').value);
-
-    // Update range display values
-    document.getElementById('connectors-value').textContent = connectors;
-    document.getElementById('apps-value').textContent = apps;
-
-    // MuleSoft costs
-    var muleBase = 25000;
-    var muleVcore = 50000 * vcores;
-    var muleConnectors = 15000 * connectors;
-    var muleTotal = muleBase + muleVcore + muleConnectors;
-
-    // Open-source costs
-    var ossBase = 5000;
-    var ossCompute = 3000 * vcores;
-    var ossMonitoring = 5000;
-    var ossCICD = 2000;
-    var ossTotal = ossBase + ossCompute + ossMonitoring + ossCICD;
-
-    // Savings
-    var savings = muleTotal - ossTotal;
-    var pct = Math.round((savings / muleTotal) * 100);
-
-    // Format helper
     function fmt(n) {
         return '$' + n.toLocaleString();
     }
 
-    // MuleSoft card
+    var muleTotal, ossTotal, muleBreakdown, ossBreakdown, apps;
+
+    if (model === 'vcore') {
+        var vcores = parseInt(document.getElementById('vcores').value);
+        var connectors = parseInt(document.getElementById('connectors').value);
+        apps = parseInt(document.getElementById('apps-vcore').value);
+
+        document.getElementById('connectors-value').textContent = connectors;
+        document.getElementById('apps-vcore-value').textContent = apps;
+
+        // MuleSoft vCore model
+        var muleBase = 25000;
+        var muleVcore = 50000 * vcores;
+        var muleConnectors = 15000 * connectors;
+        muleTotal = muleBase + muleVcore + muleConnectors;
+
+        muleBreakdown =
+            'Base platform: ' + fmt(muleBase) + '<br>' +
+            'vCore licensing (' + vcores + ' &times; $50K): ' + fmt(muleVcore) + '<br>' +
+            'Connector fees (' + connectors + ' &times; $15K): ' + fmt(muleConnectors);
+
+        // Open-source equivalent
+        var ossBase = 5000;
+        var ossCompute = 3000 * vcores;
+        var ossMonitoring = 5000;
+        var ossCICD = 2000;
+        ossTotal = ossBase + ossCompute + ossMonitoring + ossCICD;
+
+        ossBreakdown =
+            'Base infrastructure: ' + fmt(ossBase) + '<br>' +
+            'Compute (' + vcores + ' vCPU &times; $3K): ' + fmt(ossCompute) + '<br>' +
+            'Monitoring: $5,000<br>' +
+            'CI/CD: $2,000';
+
+    } else {
+        // Flow-based model
+        var tier = document.getElementById('tier').value;
+        var flows = parseInt(document.getElementById('flows').value);
+        var msgMillions = parseInt(document.getElementById('messages').value);
+
+        document.getElementById('flows-value').textContent = flows;
+        document.getElementById('messages-value').textContent = msgMillions + 'M';
+        apps = flows;
+
+        // Tier base costs (estimated from reported contract values)
+        var tierBase, tierFlows, tierMsgs, tierName;
+        if (tier === 'starter') {
+            tierBase = 90000;   // ~$90K for Starter (50 flows, 5M msgs)
+            tierFlows = 50;
+            tierMsgs = 5;
+            tierName = 'Starter';
+        } else {
+            tierBase = 210000;  // ~$210K for Advanced (200 flows, 20M msgs)
+            tierFlows = 200;
+            tierMsgs = 20;
+            tierName = 'Advanced';
+        }
+
+        // Overage costs
+        var extraFlows = Math.max(0, flows - tierFlows);
+        var flowOveragePacks = Math.ceil(extraFlows / 200);
+        var flowOverageCost = flowOveragePacks * 180000; // ~$180K per 200-flow pack
+
+        var extraMsgs = Math.max(0, msgMillions * 12 - tierMsgs);
+        var msgOveragePacks = Math.ceil(extraMsgs / 1);
+        var msgOverageCost = extraMsgs > 0 ? msgOveragePacks * 500 : 0;
+
+        // Support (estimated)
+        var support = 50000;
+
+        muleTotal = tierBase + flowOverageCost + msgOverageCost + support;
+
+        muleBreakdown =
+            tierName + ' tier base: ' + fmt(tierBase) + '<br>' +
+            'Included: ' + tierFlows + ' flows, ' + tierMsgs + 'M msgs/yr<br>';
+        if (flowOverageCost > 0) {
+            muleBreakdown += 'Flow overage (' + extraFlows + ' extra): ' + fmt(flowOverageCost) + '<br>';
+        }
+        if (msgOverageCost > 0) {
+            muleBreakdown += 'Message overage: ' + fmt(msgOverageCost) + '<br>';
+        }
+        muleBreakdown += 'Support: ' + fmt(support);
+
+        // Open-source equivalent (scaled to flow count)
+        var ossInfra = 5000 + Math.ceil(flows / 10) * 2000; // scale infra with flows
+        var ossMonitoring2 = 5000;
+        var ossCICD2 = 2000;
+        ossTotal = ossInfra + ossMonitoring2 + ossCICD2;
+
+        ossBreakdown =
+            'Infrastructure (scaled to ' + flows + ' flows): ' + fmt(ossInfra) + '<br>' +
+            'Monitoring: $5,000<br>' +
+            'CI/CD: $2,000';
+    }
+
+    // Results
+    var savings = muleTotal - ossTotal;
+    var pct = Math.round((savings / muleTotal) * 100);
+
     document.getElementById('mule-total').textContent = fmt(muleTotal);
-    document.getElementById('mule-breakdown').innerHTML =
-        'Base platform: ' + fmt(muleBase) + '<br>' +
-        'vCore licensing: ' + fmt(muleVcore) + '<br>' +
-        'Connector fees: ' + fmt(muleConnectors);
+    document.getElementById('mule-breakdown').innerHTML = muleBreakdown;
 
-    // Open-source card
     document.getElementById('oss-total').textContent = fmt(ossTotal);
-    document.getElementById('oss-breakdown').innerHTML =
-        'Base infrastructure: ' + fmt(ossBase) + '<br>' +
-        'Compute ($3K/vCore): ' + fmt(ossCompute) + '<br>' +
-        'Monitoring: $5,000<br>' +
-        'CI/CD: $2,000';
+    document.getElementById('oss-breakdown').innerHTML = ossBreakdown;
 
-    // Savings card
     document.getElementById('savings-total').textContent = fmt(savings);
     document.getElementById('savings-breakdown').textContent =
         pct + '% reduction in annual integration costs';
 
-    // Migration investment (approx half of MuleSoft annual cost)
+    // Migration investment (~half of MuleSoft annual cost)
     var migrationCost = Math.round(muleTotal * 0.5);
     var monthlySavings = savings / 12;
     var breakevenMonths = Math.ceil(migrationCost / monthlySavings);
