@@ -1366,8 +1366,26 @@ footer .version {
     .pricing-tier { grid-template-columns: 70px 70px 1fr; gap: 0.5rem; font-size: 0.85rem; }
 }
 
+/* Theme toggle */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.35rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.theme-toggle:hover { color: var(--ink); }
+html:not([data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
+html:not([data-theme="dark"]) .theme-toggle .icon-moon { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
+html[data-theme="dark"] {
     :root {
         --ink: #e8e8e6;
         --paper: #141413;
