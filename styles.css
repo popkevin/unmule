@@ -1199,7 +1199,7 @@ footer .version {
 .contact-hero-band {
     background: var(--ink);
     color: var(--paper);
-    padding: 5rem 2rem 4rem;
+    padding: 4rem 2rem 5rem;
 }
 
 .contact-hero-inner {
@@ -1228,7 +1228,7 @@ footer .version {
 .contact-body {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 3rem 2rem 4rem;
+    padding: 4rem 2rem 4rem;
 }
 
 .contact-body-grid {
@@ -1244,7 +1244,7 @@ footer .version {
     border: 1px solid var(--border);
     border-radius: 12px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    margin-top: -3rem;
+    margin-top: 0;
     position: relative;
     z-index: 1;
 }
@@ -1358,11 +1358,58 @@ footer .version {
     .calc-migration .migration-row { grid-template-columns: 1fr; gap: 1rem; }
     .calc-migration .migration-arrow { transform: rotate(90deg); }
     .contact-body-grid { grid-template-columns: 1fr; }
-    .contact-form-card { margin-top: -2rem; }
+    .contact-form-card { margin-top: 0; }
     .contact-steps-grid { grid-template-columns: 1fr; }
     .pricing-cards { grid-template-columns: 1fr; }
     .support-cards { grid-template-columns: 1fr; }
     .pricing-cta-buttons { flex-direction: column; align-items: center; }
     .pricing-tier { grid-template-columns: 70px 70px 1fr; gap: 0.5rem; font-size: 0.85rem; }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #e8e8e6;
+        --paper: #141413;
+        --accent: #e06b3a;
+        --accent-dark: #f07d4f;
+        --muted: #9a9a9a;
+        --border: #2e2e2c;
+    }
+
+    /* Stack pages */
+    .stack-cta { background: #1e1e1c; }
+    .showcase-card { border-color: #1a5c2e; }
+    .showcase-card .card-header { background: #132a18; }
+    .card-gallery { background: #1e1e1c; }
+    .adv-mule { background: #2a1515; border-left-color: #b91c1c; color: #fca5a5; }
+    .adv-oss { background: #132a18; border-left-color: #15803d; color: #86efac; }
+
+    /* Calculator */
+    .calc-card.mule { background: #2a1515; border-color: #5c2020; }
+    .calc-card.oss { background: #132a18; border-color: #1a5c2e; }
+    .calc-card.savings { background: #0f0f0e; }
+    .calc-card.mule .calc-amount { color: #f87171; }
+    .calc-card.oss .calc-amount { color: #4ade80; }
+    .calc-migration { background: #0f0f0e; }
+    .calc-cta { background: #1e1e1c; }
+
+    /* Blog */
+    .blog-article .blog-body code { background: #1e1e1c; }
+    .blog-article .blog-cta { background: #1e1e1c; }
+
+    /* Pricing */
+    .pricing-card-header { background: #1e1e1c; }
+    .pricing-assessment { background: #132a18; border-color: #1a5c2e; }
+    .pricing-assessment span { color: #4ade80; }
+    .pricing-tier { background: #1e1e1c; }
+    .pricing-best-for { background: #1e1e1c; }
+    .pricing-bottom-cta { background: #1e1e1c; }
+
+    /* Contact page */
+    .contact-hero-band { background: #0f0f0e; }
+    .contact-form-card { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+    .contact-sidebar-icon { background: #2a1515; }
+    .contact-steps { background: #1e1e1c; }
 }
 

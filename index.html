@@ -647,6 +647,46 @@
             .nav-links a { font-size: 0.85rem; }
             .case-study-metrics { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --ink: #e8e8e6;
+                --paper: #141413;
+                --accent: #e06b3a;
+                --accent-dark: #f07d4f;
+                --muted: #9a9a9a;
+                --border: #2e2e2c;
+            }
+
+            section.alt { background: #1e1e1c; }
+            .problem-card.bad { background: #2a1515; border-color: #5c2020; }
+            .problem-card.good { background: #132a18; border-color: #1a5c2e; }
+            .problem-card.bad li::before { color: #f87171; }
+            .problem-card.good li::before { color: #4ade80; }
+
+            .cost-card.mule { border-color: #5c2020; }
+            .cost-card.camel { border-color: #1a5c2e; }
+            .cost-card.mule .cost-header { background: #2a1515; color: #f87171; }
+            .cost-card.camel .cost-header { background: #132a18; color: #4ade80; }
+            .cost-card.mule .cost-lines li:last-child { background: #2a1515; }
+            .cost-card.camel .cost-lines li:last-child { background: #132a18; }
+
+            .savings-banner { background: #0f0f0e; }
+
+            .mapping { background: #0f0f0e; color: #e8e8e6; }
+            .mapping .section-title { color: #e8e8e6; }
+            .mapping-table td:nth-child(2) { color: #e8e8e6; }
+
+            .cs-metric { background: #1e1e1c; }
+
+            .contact-form input,
+            .contact-form textarea {
+                background: var(--paper);
+                color: var(--ink);
+                border-color: var(--border);
+            }
+        }
     </style>
 </head>
 <body>
