@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Unmule</title>
+    <meta name="description" content="Get in touch with Unmule. Book a free MuleSoft migration assessment or ask us anything about moving to Apache Camel.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/pricing.html">Pricing</a>
+        <a href="/blog/">Blog</a>
+        <a href="/contact.html" class="cta-link">Get in touch</a>
+    </div>
+</nav>
+
+<div class="contact contact-page">
+    <div class="contact-grid">
+        <div class="contact-text">
+            <span class="section-label">Get Started</span>
+            <h2>Find out what you'd save.</h2>
+            <p>Tell us about your MuleSoft environment and we'll come back with a free assessment &mdash; timeline, cost, and risk.</p>
+            <p style="margin-top: 1.5rem; font-size: 0.95rem;">Or email us directly at <a href="mailto:kevin@unmule.com" style="color: var(--accent); font-weight: 600; text-decoration: none;">kevin@unmule.com</a></p>
+        </div>
+        <form class="contact-form" id="contactForm">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Work email" required>
+            <input type="text" name="company" placeholder="Company">
+            <textarea name="message" placeholder="Tell us about your MuleSoft environment &mdash; number of flows, connectors, pain points..."></textarea>
+            <button type="submit">Send</button>
+            <div class="form-status" id="formStatus"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    const status = document.getElementById('formStatus');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    status.className = 'form-status';
+
+    const data = Object.fromEntries(new FormData(this));
+
+    try {
+        const res = await fetch('https://formsubmit.co/ajax/kevin@unmule.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+            status.textContent = "Thanks! We'll be in touch within 24 hours.";
+            status.className = 'form-status success';
+            this.reset();
+        } else {
+            throw new Error();
+        }
+    } catch {
+        status.textContent = 'Something went wrong. Email us directly at kevin@unmule.com';
+        status.className = 'form-status error';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Send';
+});
+</script>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+    <span class="version">v2026.02.22b</span>
+</footer>
+
+</body>
+</html>
