@@ -20,22 +20,79 @@
     </div>
 </nav>
 
-<div class="contact contact-page">
-    <div class="contact-grid">
-        <div class="contact-text">
-            <span class="section-label">Get Started</span>
-            <h2>Find out what you'd save.</h2>
-            <p>Tell us about your MuleSoft environment and we'll come back with a free assessment &mdash; timeline, cost, and risk.</p>
-            <p style="margin-top: 1.5rem; font-size: 0.95rem;">Or email us directly at <a href="mailto:kevin@unmule.com" style="color: var(--accent); font-weight: 600; text-decoration: none;">kevin@unmule.com</a></p>
+<div class="contact-hero-band">
+    <div class="contact-hero-inner">
+        <span class="section-label">Get Started</span>
+        <h1>Let's look at your numbers.</h1>
+        <p>Tell us about your MuleSoft environment. We'll come back with a free assessment &mdash; migration timeline, hard cost estimate, and risk analysis.</p>
+    </div>
+</div>
+
+<div class="contact-body">
+    <div class="contact-body-grid">
+        <div class="contact-form-card">
+            <form class="contact-form" id="contactForm">
+                <input type="text" name="name" placeholder="Your name" required>
+                <input type="email" name="email" placeholder="Work email" required>
+                <input type="text" name="company" placeholder="Company">
+                <textarea name="message" placeholder="Tell us about your MuleSoft environment &mdash; number of flows, connectors, pain points..."></textarea>
+                <button type="submit">Send Message</button>
+                <div class="form-status" id="formStatus"></div>
+            </form>
         </div>
-        <form class="contact-form" id="contactForm">
-            <input type="text" name="name" placeholder="Your name" required>
-            <input type="email" name="email" placeholder="Work email" required>
-            <input type="text" name="company" placeholder="Company">
-            <textarea name="message" placeholder="Tell us about your MuleSoft environment &mdash; number of flows, connectors, pain points..."></textarea>
-            <button type="submit">Send</button>
-            <div class="form-status" id="formStatus"></div>
-        </form>
+        <div class="contact-sidebar">
+            <div class="contact-sidebar-item">
+                <div class="contact-sidebar-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c45a2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                    <strong>Email us directly</strong>
+                    <a href="mailto:kevin@unmule.com">kevin@unmule.com</a>
+                </div>
+            </div>
+            <div class="contact-sidebar-item">
+                <div class="contact-sidebar-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c45a2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                    <strong>Response time</strong>
+                    <span>Within 24 hours, usually same day</span>
+                </div>
+            </div>
+            <div class="contact-sidebar-item">
+                <div class="contact-sidebar-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c45a2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <strong>No commitment</strong>
+                    <span>Free assessment, no strings attached</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contact-steps">
+    <div class="contact-steps-inner">
+        <span class="section-label">What Happens Next</span>
+        <h2 class="section-title">Three steps to clarity.</h2>
+        <div class="contact-steps-grid">
+            <div class="contact-step">
+                <div class="contact-step-num">1</div>
+                <h3>We talk</h3>
+                <p>A 30-minute call to understand your MuleSoft estate &mdash; flows, connectors, pain points, timeline.</p>
+            </div>
+            <div class="contact-step">
+                <div class="contact-step-num">2</div>
+                <h3>We assess</h3>
+                <p>We analyze your environment and deliver a migration plan with a hard cost estimate and timeline.</p>
+            </div>
+            <div class="contact-step">
+                <div class="contact-step-num">3</div>
+                <h3>You decide</h3>
+                <p>No pressure. You'll have the numbers to make the call &mdash; migrate, negotiate, or stay put.</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -70,7 +127,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     }
 
     btn.disabled = false;
-    btn.textContent = 'Send';
+    btn.textContent = 'Send Message';
 });
 </script>
 
