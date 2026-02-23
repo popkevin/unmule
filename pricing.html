@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | Unmule</title>
+    <meta name="description" content="Transparent MuleSoft migration pricing. Two models: fixed-rate at 50% of your MuleSoft spend, or granular per-flow pricing. No hidden fees.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">un<span>mule</span></a>
+    <div class="nav-links">
+        <a href="/calculator.html">Calculator</a>
+        <a href="/pricing.html">Pricing</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="cta-link">Get in touch</a>
+    </div>
+</nav>
+
+<div class="pricing-hero">
+    <span class="section-label">Pricing</span>
+    <h1>Transparent Pricing</h1>
+    <p>Unlike MuleSoft, we show you the numbers before you talk to anyone. Pick the model that fits your team.</p>
+</div>
+
+<div class="pricing-cards">
+    <div class="pricing-card">
+        <div class="pricing-card-header">
+            <h2>Fixed-Rate Migration</h2>
+            <div class="pricing-card-price">50%</div>
+            <div class="pricing-card-price-note">of your annual MuleSoft spend</div>
+        </div>
+        <div class="pricing-card-body">
+            <ul class="pricing-includes">
+                <li>Full flow migration assessment</li>
+                <li>Flow-by-flow migration to Apache Camel</li>
+                <li>Infrastructure setup (Kubernetes, CI/CD, monitoring)</li>
+                <li>Testing &amp; validation</li>
+                <li>Knowledge transfer &amp; documentation</li>
+            </ul>
+            <div class="pricing-best-for">Best for teams that want a single, predictable number. No line items, no surprises &mdash; you know the total before you sign.</div>
+            <a href="/#contact" class="btn btn-primary">Get a Quote</a>
+        </div>
+    </div>
+
+    <div class="pricing-card">
+        <div class="pricing-card-header">
+            <h2>Per-Flow Migration</h2>
+            <div class="pricing-card-price">$5K&ndash;$22K</div>
+            <div class="pricing-card-price-note">per flow, based on complexity</div>
+        </div>
+        <div class="pricing-card-body">
+            <div class="pricing-assessment">
+                <strong>Assessment: $15,000</strong>
+                <span>Credited toward migration if you proceed</span>
+            </div>
+            <div class="pricing-tiers">
+                <div class="pricing-tier">
+                    <span class="tier-label">Simple</span>
+                    <span class="tier-price">$5,000</span>
+                    <span class="tier-desc">Stateless REST, HTTP proxies</span>
+                </div>
+                <div class="pricing-tier">
+                    <span class="tier-label">Medium</span>
+                    <span class="tier-price">$12,000</span>
+                    <span class="tier-desc">Transformations, multi-system</span>
+                </div>
+                <div class="pricing-tier">
+                    <span class="tier-label">Complex</span>
+                    <span class="tier-price">$22,000</span>
+                    <span class="tier-desc">Batch, stateful, saga, heavy DataWeave</span>
+                </div>
+            </div>
+            <ul class="pricing-includes pricing-addons">
+                <li>Infrastructure setup: <strong>$12,000</strong> one-time</li>
+                <li>Knowledge transfer: <strong>$8,000</strong> (training, runbooks, docs)</li>
+            </ul>
+            <div class="pricing-best-for">Best for teams that want granular control. Pay for exactly what you need, one flow at a time.</div>
+            <a href="/#contact" class="btn btn-primary">Get a Quote</a>
+        </div>
+    </div>
+</div>
+
+<div class="pricing-support">
+    <span class="section-label">Ongoing Support</span>
+    <h2 class="section-title">Keep it running after migration.</h2>
+    <p class="pricing-support-subtitle">All optional. Most teams self-manage after knowledge transfer &mdash; but we're here if you need us.</p>
+
+    <div class="support-cards">
+        <div class="support-card">
+            <h3>Per-Flow Maintenance</h3>
+            <div class="support-price">$750<span>/flow/month</span></div>
+            <p>Monitoring, patching, incident response. We watch your flows so you don't have to.</p>
+        </div>
+        <div class="support-card">
+            <h3>Engineering Hours</h3>
+            <div class="support-price">$225<span>/hour</span></div>
+            <p>Ad-hoc development, new flows, troubleshooting. Use as much or as little as you need.</p>
+        </div>
+        <div class="support-card">
+            <h3>Managed Platform</h3>
+            <div class="support-price">Custom</div>
+            <p>Full platform operations &mdash; infrastructure, deployments, monitoring, on-call. Your integration layer, our problem.</p>
+        </div>
+    </div>
+</div>
+
+<div class="pricing-faq">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-title">Common questions.</h2>
+
+    <div class="faq-list">
+        <details class="faq-item">
+            <summary>Which pricing model should I choose?</summary>
+            <p><strong>Fixed-rate</strong> is simpler &mdash; you know the total cost upfront, and it includes everything. Choose this if you want predictability and plan to migrate your entire MuleSoft estate.</p>
+            <p><strong>Per-flow</strong> gives you more control. Start with a paid assessment to understand complexity, then migrate flows incrementally. Choose this if you want to start small, have a mix of simple and complex flows, or only plan to migrate part of your environment.</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>What counts as simple vs. medium vs. complex?</summary>
+            <p><strong>Simple:</strong> Stateless REST APIs, HTTP proxies, basic request/response patterns. Typically a single system with straightforward mappings.</p>
+            <p><strong>Medium:</strong> Flows with data transformations, multiple system integrations, error handling with retries, or moderate DataWeave logic.</p>
+            <p><strong>Complex:</strong> Batch processing, stateful orchestrations, saga patterns, heavy DataWeave transformations, EDI/X12 processing, or flows with complex failure recovery.</p>
+            <p>The assessment categorizes every flow and you approve the classification before we start.</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>Is the assessment fee refundable?</summary>
+            <p>The $15,000 assessment fee is <strong>credited in full</strong> toward your migration if you proceed. If you don't proceed, you keep the deliverables: a complete flow inventory, complexity scoring, migration plan, timeline, and hard cost estimate. Either way, you walk away with a clear picture of what migration looks like.</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>What's included in per-flow maintenance?</summary>
+            <p>At $750/flow/month, we handle monitoring (alerting, dashboards, SLA tracking), patching (runtime updates, dependency upgrades, security patches), and incident response (on-call coverage, root cause analysis, fix deployment). Think of it as managed middleware without the MuleSoft price tag.</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>Can I start with a few flows and migrate the rest later?</summary>
+            <p>Absolutely. This is actually the most common approach with per-flow pricing. Start with 3&ndash;5 flows, validate the architecture in production, then migrate the rest at your own pace. The infrastructure setup ($12K) is a one-time cost regardless of how many flows you migrate.</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>How does pricing compare to staying on MuleSoft?</summary>
+            <p>Migration typically costs about 50% of one year's MuleSoft spend. After that, your ongoing costs drop to cloud infrastructure only &mdash; usually 90&ndash;97% less than MuleSoft licensing. Most customers break even within 4&ndash;8 months.</p>
+            <p><a href="/calculator.html">Try the calculator</a> with your numbers to see the math.</p>
+        </details>
+    </div>
+</div>
+
+<div class="pricing-bottom-cta">
+    <h2>Ready to see your numbers?</h2>
+    <p>Run them through the calculator, or skip straight to a conversation.</p>
+    <div class="pricing-cta-buttons">
+        <a href="/calculator.html" class="btn btn-secondary">Try the Calculator</a>
+        <a href="/#contact" class="btn btn-primary">Book a Free Assessment</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Unmule. All rights reserved.
+    <span class="version">v2026.02.22b</span>
+</footer>
+
+</body>
+</html>
